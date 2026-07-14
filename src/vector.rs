@@ -1,6 +1,6 @@
 use std::ptr::*; 
 use std::mem;
-use std::alloc::{self, Layout}; // me hablo con el allocator
+use std::alloc::{self, Layout};
 use std::ops::Deref;
 use std::ops::DerefMut;
 
@@ -11,7 +11,6 @@ pub struct Vector<T> {
 }
 
 impl<T> Vector<T>{
-  // la inicializacion de toda la vida
   pub fn new() -> Vector<T>{
     assert!(mem::size_of::<T>() != 0, "we're not ready to handle zero-sized types");
     Vector { 
@@ -56,7 +55,6 @@ impl<T> Vector<T>{
     self.cap = new_cap
   }
 
-  // push func. 
   pub fn push(&mut self, value:T){
     // si estamos full -> expando
     if self.len == self.cap{
@@ -65,14 +63,12 @@ impl<T> Vector<T>{
 
     unsafe{
       // escribe en memoria sin leer ni tirar el valor antiguo
-      
       // .add() es la version usize de .offset() (isize)
       // va desde el self.ptr hasta la prox. pos. del slot libre (self.len) 
       std::ptr::write(self.ptr.as_ptr().add(self.len), value);
     }
   }
 
-  // pop func.
   pub fn pop(&mut self) -> Option<T>{
     if self.len == 0 {
       None
