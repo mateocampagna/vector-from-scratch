@@ -1,3 +1,4 @@
+use std::mem::ManuallyDrop;
 use std::ptr::*; 
 use std::mem;
 use std::alloc::{self, Layout};
@@ -140,3 +141,88 @@ impl<T> DerefMut for Vector<T>{
 
 unsafe impl<T: Send> Send for Vector<T> {}
 unsafe impl<T: Sync> Sync for Vector<T> {}
+
+
+pub struct IntoIter<T>{
+  buf:NonNull<T>, 
+  cap:usize,
+  start:*const T, 
+  end:*const T, 
+}
+
+impl<T> IntoIterator for Vector<T>{
+  type Item = T; 
+  type IntoIter = IntoIter<T>;
+
+  fn into_iter(self) -> IntoIter<T>{
+    let vec = ManuallyDrop::new(self);
+    let ptr = vec.ptr;
+    let cap = vec.cap;
+    let len = vec.len;
+
+    IntoIter { 
+      buf: ptr, 
+      cap, 
+      start: ptr.as_ptr(), 
+      end:if cap == 0 {
+            ptr.as_ptr()
+          }
+          else{
+            unsafe { ptr.as_ptr().add(len) }
+          },
+    }
+  }
+}
+
+// iterating forward
+impl<T> Iterator for IntoIter<T>{
+  type Item = T; 
+  
+  fn next(&mut self) -> Option<T>{
+    if self.start == self.end {
+      None
+    }
+    else{
+      unsafe{
+        let res = std::ptr::read(self.start);
+        self.start = self.start.offset(1);
+        Some(res)
+      }
+    }
+  }
+
+  fn size_hint(&self) -> (usize, Option<usize>){
+    let len = (self.end as usize - self.start as usize) / mem::size_of::<T>();
+    
+    return (len, Some(len));
+  }
+}
+
+// iterating backwards
+impl<T> DoubleEndedIterator for IntoIter<T> {
+  fn next_back(&mut self) -> Option<Self::Item> {
+      if self.start == self.end{
+        None
+      }
+      else{
+        unsafe{
+          self.end = self.end.offset(-1); 
+          Some(std::ptr::read(self.end))
+        }
+      }
+  }
+}
+
+// Intoiter takes ownership of its alloc. -> Drop needed to free it
+impl<T> Drop for IntoIter<T> {
+    fn drop(&mut self) {
+        if self.cap != 0 {
+            // drop any remaining elements
+            for _ in &mut *self {}
+            let layout = Layout::array::<T>(self.cap).unwrap();
+            unsafe {
+                alloc::dealloc(self.buf.as_ptr() as *mut u8, layout);
+            }
+        }
+    }
+}
