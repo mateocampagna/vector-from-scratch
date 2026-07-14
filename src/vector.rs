@@ -83,9 +83,23 @@ impl<T> Vector<T>{
     }
   }
 
-  // deallocating func.
+  pub fn insert(&mut self, idx:usize, value:T){
+    assert!(idx <= self.len, "index out of bounds");
+    if self.len == self.cap{
+      self.grow();
+    }
 
+    unsafe{
+      // ptr::copy(src, dest, len) -> copy from src to dest len elems
+      std::ptr::copy(
+        self.ptr.as_ptr().add(idx), 
+        self.ptr.as_ptr().add(idx + 1), 
+        self.len - idx,
+      )
+    }
 
+    self.len += 1
+  }
 } 
 
 impl<T> Drop for Vector<T>{
