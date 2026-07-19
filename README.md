@@ -1,5 +1,5 @@
 
-Vector From Scratch — Dynamic vector implemented in Rust
+Vector From Scratch |  Dynamic vector implemented in Rust
 =======================================================
 
 Project overview
@@ -36,19 +36,12 @@ Run the example (uses the implementation from `src/vector.rs`):
 cargo run --release
 ```
 
-Tests
------
-
-If unit tests are present, run them with:
-
-```bash
-cargo test
-```
 
 Usage & API
 -----------
 
 Open [src/vector.rs](src/vector.rs) to see the public API and implementation. The example in [src/main.rs](src/main.rs) shows basic usage (creating a vector, pushing elements, indexing, and popping).
+
 
 Goals and learning outcomes
 --------------------------
@@ -56,13 +49,3 @@ Goals and learning outcomes
 - Understand how a dynamic array manages capacity and size
 - See how Rust interacts with raw pointers and manual memory management
 - Learn reallocation strategies and trade-offs
-
-Contributing
-------------
-
-This is a small educational project. Contributions should prioritize clarity and tests that demonstrate behaviors. Open an issue or submit a pull request with a focused change.
-
-License
--------
-
-No license file is included by default. Add a `LICENSE` file if you intend to apply an open-source license.
