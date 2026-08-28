@@ -1,1 +1,26 @@
+.DS_Store
+Thumbs.db
+
+# Build output
+/target/
+
+# Cargo lock (uncomment if you prefer to track Cargo.lock for apps)
+Cargo.lock
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Swap / backup files
+*~
+*.swp
+
+# Logs
+*.log
+
+# Coverage and temporary files
+coverage/
+.cache/
 /target
