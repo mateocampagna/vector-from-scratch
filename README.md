@@ -1,51 +1,41 @@
+# Vector From Scratch
 
-Vector From Scratch |  Dynamic vector implemented in Rust
-=======================================================
+A dynamic vector implemented from scratch in Rust.
 
-Project overview
-----------------
+This project was made to learn how `unsafe` Rust works and how dynamic data structures manage memory under the hood.
 
-This repository contains a small Rust project that implements a dynamic array (vector) from scratch. It is an educational implementation demonstrating core concepts such as:
+The vector uses raw pointers and manual heap allocation to implement things like:
 
-- Manual heap allocation and deallocation
-- Capacity growth strategy (reallocation)
-- Element push/pop operations
-- Indexing and iteration
+* `push` and `pop`
+* `insert` and `remove`
+* automatic capacity growth
+* indexing
+* iteration
+* manual memory cleanup
 
-The implementation is minimalist and intended for learning and experimentation rather than production use.
+The goal is **not** to build a better `Vec<T>` than Rust's standard library, but to understand what happens behind the scenes when building a dynamic array.
 
-Repository layout
------------------
+## Structure
 
-- `Cargo.toml` — project manifest
-- `src/main.rs` — example runner that uses the custom vector
-- `src/vector.rs` — the dynamic vector implementation and its API
-
-Build and run
--------------
-
-Build the project with Cargo:
-
-```bash
-cargo build --release
+```text
+src/
+├── main.rs
+└── vector.rs
 ```
 
-Run the example (uses the implementation from `src/vector.rs`):
+* `vector.rs` — implementation of the vector
+* `main.rs` — small example using it
+
+## Run
 
 ```bash
-cargo run --release
+cargo run
 ```
 
+Run the tests with:
 
-Usage & API
------------
+```bash
+cargo test
+```
 
-Open [src/vector.rs](src/vector.rs) to see the public API and implementation. The example in [src/main.rs](src/main.rs) shows basic usage (creating a vector, pushing elements, indexing, and popping).
-
-
-Goals and learning outcomes
---------------------------
-
-- Understand how a dynamic array manages capacity and size
-- See how Rust interacts with raw pointers and manual memory management
-- Learn reallocation strategies and trade-offs
+> This is an educational project and is not intended for production use.
